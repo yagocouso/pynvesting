@@ -22,27 +22,39 @@ class Headers:
     
     __navigate = {'sec-fetch-user': '?1', 'sec-fetch-dest': 'document'}
     
+    __request = None
+    
     def __init__(self, authority = 'www.investing.com', mode = "navigate", path = '/', **headers_values):
         self.__url = self.checkhttp(authority) + path
         self.__headers['path'], self.__headers['authority'], self.__headers['sec-fetch-mode'] = path, authority, mode
-        self.__headers.update({key:headers_values[key] for key in headers_values})
+        self.__headers.update(headers_values)
+        self.assignMode
     
     @property
-    def assignMode(self, mode):
-        self.__headers.update(self.__navigate if mode == "navigate" else self.__cors)
-
+    def assignMode(self):
+        self.__headers.update(self.__navigate if self.__headers['sec-fetch-mode'] == "navigate" else self.__cors)
+        return self.__headers
+    
+    @property
+    def data(self):
+        return self.__request
+        
     @staticmethod
     def checkhttp(url):
         return url if "http" in url else "https://" + url
     
+    @property
     def doGet(self, **params):
-        return requests.get(self.__url, headers=self.__headers, params = params)
+        self.__request = requests.get(self.__url, headers=self.__headers, params = params)
+        return self.__request
     
+    @property
     def doPost(self, **payload):
-        return requests.get(self.__url, headers=self.__headers, payload = payload)
+        self.__request = requests.post(self.__url, headers=self.__headers, payload = payload)
+        return self.__request
     
     def __call__(self):
-        return self.headers
+        return self.__request
     
     def __str__(self):
         return str(self.__headers)

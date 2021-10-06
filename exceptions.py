@@ -7,3 +7,6 @@ Created on Sat Jul 17 13:46:02 2021
 
 class GeneralError(Exception):
     """General Error"""
+    
+class IDEmpty(Exception):
+    """IDEmpty: The ID is not valid, please, use a valid ID"""
