@@ -10,3 +10,6 @@ class GeneralError(Exception):
     
 class IDEmpty(Exception):
     """IDEmpty: The ID is not valid, please, use a valid ID"""
+    
+class CountryIDNotFound(Exception):
+    """The country ID param it is not found, check this parameter"""

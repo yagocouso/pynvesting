@@ -43,14 +43,14 @@ class Headers:
     def checkhttp(url):
         return url if "http" in url else "https://" + url
     
-    @property
+    #@property
     def doGet(self, **params):
         self.__request = requests.get(self.__url, headers=self.__headers, params = params)
         return self.__request
     
-    @property
-    def doPost(self, **payload):
-        self.__request = requests.post(self.__url, headers=self.__headers, payload = payload)
+    #@property
+    def doPost(self, payload):
+        self.__request = requests.post(self.__url, headers=self.__headers, data = payload)
         return self.__request
     
     def __call__(self):
