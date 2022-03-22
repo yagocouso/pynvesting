@@ -47,5 +47,8 @@ class Info(Headers):
     def InfoSector(self):
         return self.__sector 
     
+    def __iter__(self):
+        pass
+    
     def __str__(self):
         return "Clase Info" # @todo a beatiful table

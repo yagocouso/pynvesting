@@ -25,24 +25,35 @@ from time import sleep
 class Stock(Headers):
     
     _pair_id = 0
-    _name = 0
-    _country = 0
+    _symbol = ''
+    _name = ''
+    #_country = 0
     _country_id = 0
     _sector_id = 0
     _industry_id = 0
     _exchange = 0
     _exchange_id = 0
     
-    def __init__(self, pair_id, name, country, country_id, sector_id, industry_id, exchange, exchange_id):
+    def __init__(self, pair_id, symbol, name, country_id, sector_id, industry_id, exchange, exchange_id):
         Headers.__init__(self, path = "/stock-screener/")
         self._pair_id = pair_id
-        self._name = name
-        self._country = country
+        self._symbol = symbol
+        #self._country = country
         self._country_id = country_id
         self._sector_id = sector_id
         self._industry_id = industry_id
         self._exchange = exchange
         self._exchange_id = exchange_id
+        
+    def __str__(self):
+        return self._symbol
+    
+    def __repr__(self):
+        return self._symbol
+    
+    def __add__(self, new_stock):
+        if type(new_stock) == str: return f',{new_stock},{self._exchange}:{self._symbol}'
+        return f'{self._exchange}:{self._symbol},{new_stock._exchange}:{new_stock._symbol}'
 
 
 def AllStocks(country_id, industry_id = None, sector_id = None, exchange_id = None):
@@ -59,7 +70,17 @@ while len(stocks_list) < totalCount:
     payload['pn'] = str(page)
     data = request.doPost(payload=payload).json()
     if not len(stocks_list): totalCount = int(data['totalCount'])
-    stocks_list.extend(data['hits'])
+    stocks_list.extend([Stock(
+        stk['pair_ID'], 
+        stk['stock_symbol'],
+        stk['name_trans'],
+        #country_id,
+        country_id,
+        stk['sector_id'] if 'sector_id' in stk.keys() else '',
+        stk['industry_id'] if 'industry_id' in stk.keys() else '', 
+        stk['exchange_trans'],
+        stk['exchange_ID']
+        ) for stk in data['hits']])
     page += 1
     sleep(1)
     #return stocks_list
