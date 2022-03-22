@@ -42,13 +42,13 @@ class Headers:
     __request = None
     
     def __init__(self, authority = 'www.investing.com', mode = "navigate", path = '/', **headers_values):
-        self.__url = self.checkhttp(authority) + path
+        self.__url = self.check_http(authority) + path
         self.__headers['path'], self.__headers['authority'], self.__headers['sec-fetch-mode'] = path, authority, mode
         self.__headers.update(headers_values)
-        self.assignMode
+        self.assign_mode
     
     @property
-    def assignMode(self):
+    def assign_mode(self):
         self.__headers.update(self.__navigate if self.__headers['sec-fetch-mode'] == "navigate" else self.__cors)
         return self.__headers
     
@@ -57,24 +57,24 @@ class Headers:
         return self.__request
         
     @staticmethod
-    def checkhttp(url):
+    def check_http(url):
         return url if "http" in url else "https://" + url
     
     #@property
     @staticmethod
-    def UserAgent():
+    def user_agent():
         global USER_AGENT
         return random.choice(USER_AGENT) 
     
     #@property
-    def doGet(self, **params):
-        self.__headers['user-agent'] = self.UserAgent()
+    def do_get(self, **params):
+        self.__headers['user-agent'] = self.user_agent()
         self.__request = requests.get(self.__url, headers=self.__headers, params = params)
         return self.__request
     
     #@property
-    def doPost(self, payload):
-        self.__headers['user-agent'] = self.UserAgent()
+    def do_post(self, payload):
+        self.__headers['user-agent'] = self.user_agent()
         self.__request = requests.post(self.__url, headers=self.__headers, data = payload)
         return self.__request
     
