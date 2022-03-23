@@ -33,6 +33,7 @@ class Headers:
         'sec-fetch-site': 'same-origin' 
     }
     
+
     __cors = {'sec-fetch-user':'?0', 'sec-fetch-dest':'empty', 
               'content-type': 'application/x-www-form-urlencoded',
               'x-requested-with': 'XMLHttpRequest'}
@@ -73,7 +74,7 @@ class Headers:
         return self.__request
     
     #@property
-    def do_post(self, payload):
+    def do_post(self, **payload):
         self.__headers['user-agent'] = self.user_agent()
         self.__request = requests.post(self.__url, headers=self.__headers, data = payload)
         return self.__request

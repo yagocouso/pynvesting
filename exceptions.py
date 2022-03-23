@@ -6,10 +6,21 @@ Created on Sat Jul 17 13:46:02 2021
 """
 
 class GeneralError(Exception):
-    """General Error"""
+    def __str__(self):
+       return "General Error"
     
 class IdEmpty(Exception):
-    """IDEmpty: The ID is not valid, please, use a valid ID"""
+    def __str__(self):
+       return "IDEmpty: The ID is not valid, please, use a valid ID"
     
 class CountryIdNotFound(Exception):
-    """The country ID param it is not found, check this parameter"""
+    def __str__(self):
+       return "The country ID param it is not found, check this parameter"
+    
+class ParamIsEmpty(Exception):
+    def __str__(self):
+       return  "The param is must"
+   
+class TypeNotValid(Exception):
+    def __str__(self):
+       return  "The type must be Stock"

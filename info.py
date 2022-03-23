@@ -6,7 +6,7 @@ Created on Sat Jul 17 14:20:50 2021
 """
 
 from headers import Headers
-from exceptions import IDEmpty
+from exceptions import IdEmpty
 from bs4 import BeautifulSoup as bs
 
 class Info(Headers):
