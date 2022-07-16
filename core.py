@@ -52,14 +52,15 @@ class Stock(Headers):
         return f'{self._exchange}:{self._symbol},{new_stock._exchange}:{new_stock._symbol}'
 
 
+class Cripto():
 
+    
 
 def AllStocks(country_id, industry_id = None, sector_id = None, exchange_id = None):
     pass
 
 
 def get_info(search, stock = False, news = False, articles = False):
-    global queso
     if not stock and not news and not articles: return None
     request = Headers(path = "/search/service/SearchInnerPage", mode = "cors")
     data = request.do_post(search_text = search).json()
