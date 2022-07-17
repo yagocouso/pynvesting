@@ -33,7 +33,6 @@ class Headers:
         'sec-fetch-site': 'same-origin' 
     }
     
-
     __cors = {'sec-fetch-user':'?0', 'sec-fetch-dest':'empty', 
               'content-type': 'application/x-www-form-urlencoded',
               'x-requested-with': 'XMLHttpRequest'}
@@ -61,23 +60,27 @@ class Headers:
     def check_http(url):
         return url if "http" in url else "https://" + url
     
-    #@property
     @staticmethod
     def user_agent():
         global USER_AGENT
         return random.choice(USER_AGENT) 
     
-    #@property
     def do_get(self, **params):
+        params = self.cleanparams(params)
         self.__headers['user-agent'] = self.user_agent()
         self.__request = requests.get(self.__url, headers=self.__headers, params = params)
         return self.__request
-    
-    #@property
+
     def do_post(self, **payload):
         self.__headers['user-agent'] = self.user_agent()
         self.__request = requests.post(self.__url, headers=self.__headers, data = payload)
         return self.__request
+    
+    def cleanparams(self, params):
+        if params["since"]: 
+            params["from"] = params["since"]
+            del params["since"]
+        return params
     
     def __call__(self):
         return self.__request

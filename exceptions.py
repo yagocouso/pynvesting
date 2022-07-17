@@ -24,3 +24,7 @@ class ParamIsEmpty(Exception):
 class TypeNotValid(Exception):
     def __str__(self):
        return  "The type must be Stock"
+   
+class BadRequest(Exception):
+    def __str__(self):
+       return  "The resquest isn't correct"

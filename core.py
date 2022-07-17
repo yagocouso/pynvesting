@@ -7,23 +7,18 @@ Created on Sun Oct  3 11:32:20 2021
 
 from info import Info
 from headers import Headers
-from exceptions import CountryIdNotFound, TypeNotValid
+from exceptions import CountryIdNotFound, TypeNotValid, BadRequest
 from time import sleep
+from datetime import datetime, timedelta
+import random
+from strgen import StringGenerator
 
+StringGenerator("[\l\d]{10}").render_list(1,unique=True)
 
-#class Historic(Headers, Info):
-#    pass
-
-
-#class ActValue(Headers, Info):
-#    pass
-
-
-class Stock(Headers):
+class Core(Headers):
     _pair_id = 0
     _symbol = ''
     _name = ''
-    #_country = 0
     _country_id = 0
     _sector_id = 0
     _industry_id = 0
@@ -31,10 +26,10 @@ class Stock(Headers):
     _exchange_id = 0
     
     def __init__(self, pair_id, symbol, name, country_id, sector_id, industry_id, exchange, exchange_id):
-        Headers.__init__(self, path = "/stock-screener/")
+        Headers.__init__(self, authority = "tvc4.investing.com", path = f"/{Core.rand_string()}/{Core.rand(10)}/{Core.rand(1)}/{Core.rand(1)}/{Core.rand(2)}/history")
         self._pair_id = pair_id
         self._symbol = symbol
-        #self._country = country
+        self._name = name
         self._country_id = country_id
         self._sector_id = sector_id
         self._industry_id = industry_id
@@ -50,11 +45,47 @@ class Stock(Headers):
     def __add__(self, new_stock):
         if type(new_stock) == str: return f',{new_stock},{self._exchange}:{self._symbol}'
         return f'{self._exchange}:{self._symbol},{new_stock._exchange}:{new_stock._symbol}'
-
-
-class Cripto():
-
     
+    @staticmethod
+    def rand(digits):
+        inp = 10**(digits-1)
+        out = 10**(digits-1) * 9
+        return str(int(random.uniform(inp, out)))
+    
+    @staticmethod
+    def rand_string():
+        return StringGenerator("[a-f\d]{32}").render_list(1,unique=False)[0]
+
+    def historical_values(self, intervale = "D", since = None, to = None):
+        """
+        
+
+        Parameters
+        ----------
+        intervale : number/string
+            Intervale betweeen dates, can be number => minutes and 
+            strings {"D": days, "W": weeks, "M": month, "Y":years}
+        since : datetime, optional
+            DESCRIPTION. The default is None.
+        to : datetime, optional
+            DESCRIPTION. The default is None.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        """
+        if to == None: to = datetime.now()
+        if since == None: since = to - timedelta(days=7)
+        json = self.do_get(since = int(since.timestamp()), symbol=self._symbol, resolution=intervale, to=int(to.timestamp()))
+        try: 
+            result = json.json()
+        except: 
+            raise BadRequest
+        return result
+  
+
 
 def AllStocks(country_id, industry_id = None, sector_id = None, exchange_id = None):
     pass
@@ -68,11 +99,32 @@ def get_info(search, stock = False, news = False, articles = False):
     if news: output['news'] = data['news']
     if articles: output['articles'] = data['articles']
     stk = data['quotes'][0]
-    if stock: output['stock'] = Stock(pair_id = stk['pairId'], symbol = stk['symbol'], name = stk['name'], 
-                 country_id = stk['countryID'], sector_id = stk['sector'], 
-                 industry_id = stk['industry'], exchange = stk['exchange'], 
-                 exchange_id = stk['exchangeID'])
+    if stock: 
+        if stk['isCrypto']:
+            output['stock'] = Cripto(pair_id = stk['pairId'], symbol = stk['symbol'], 
+                name = stk['name'], country_id = stk['countryID'], sector_id = stk['sector'], 
+                industry_id = stk['industry'], exchange = stk['exchange'], exchange_id = stk['exchangeID'])
+        else:
+            output['stock'] = Stock(pair_id = stk['pairId'], symbol = stk['symbol'], 
+                name = stk['name'], country_id = stk['countryID'], sector_id = stk['sector'], 
+                industry_id = stk['industry'], exchange = stk['exchange'], exchange_id = stk['exchangeID'])
+            
     return output if len(output.keys()) > 1 else output[list(output)[0]]
+
+class Stock(Core):
+    def __init__(self, pair_id, symbol, name, country_id, sector_id, industry_id, exchange, exchange_id):
+        Core.__init__(self, pair_id, symbol, name, country_id, sector_id, industry_id, exchange, exchange_id)
+    
+    def __repr__(self):
+        return f'Esta es la clase stock'
+
+
+class Cripto(Core):
+    def __init__(self, pair_id, symbol, name, country_id, sector_id, industry_id, exchange, exchange_id):
+        Core.__init__(self, pair_id, symbol, name, country_id, sector_id, industry_id, exchange, exchange_id)
+    
+    def __repr__(self):
+        return f'Esta es la clase para las criptos'
 
 
 
@@ -113,7 +165,7 @@ def get_info(search, stock = False, news = False, articles = False):
 #             'order[col]':'name_trans', 
 #             'order[dir]':'a'
 #     }  """
-#     #♣a = requests.post("https://www.investing.com/stock-screener/Service/SearchStocks", headers=headers, data=payload)
+#     #a = requests.post("https://www.investing.com/stock-screener/Service/SearchStocks", headers=headers, data=payload)
 #     #a.status_code
 #     #datos = pd.DataFrame(a.json()['hits'])
 
