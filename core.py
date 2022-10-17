@@ -12,10 +12,15 @@ from time import sleep
 from datetime import datetime, timedelta
 import random
 from strgen import StringGenerator
+# it's necessary to install strgen and StringGenerator libraries
 
-StringGenerator("[\l\d]{10}").render_list(1,unique=True)
 
 class Core(Headers):
+    """
+    This class has the information needed to get the info desired about a stock or a crypto asset.
+
+    It relies on the Headers class.
+    """
     _pair_id = 0
     _symbol = ''
     _name = ''
@@ -58,7 +63,7 @@ class Core(Headers):
 
     def historical_values(self, intervale = "D", since = None, to = None):
         """
-        
+        Returns historical values about a financial asset
 
         Parameters
         ----------
@@ -92,6 +97,18 @@ def AllStocks(country_id, industry_id = None, sector_id = None, exchange_id = No
 
 
 def get_info(search, stock = False, news = False, articles = False):
+
+    """
+    Returns the basic information about a financial asset:
+    - pair_id
+    - symbol
+    - name
+    - countryID
+    - sector
+    - industry
+    - exchange
+    - exchangeID
+    """
     if not stock and not news and not articles: return None
     request = Headers(path = "/search/service/SearchInnerPage", mode = "cors")
     data = request.do_post(search_text = search).json()
@@ -116,15 +133,14 @@ class Stock(Core):
         Core.__init__(self, pair_id, symbol, name, country_id, sector_id, industry_id, exchange, exchange_id)
     
     def __repr__(self):
-        return f'Esta es la clase stock'
-
+        return f'Stock class'
 
 class Cripto(Core):
     def __init__(self, pair_id, symbol, name, country_id, sector_id, industry_id, exchange, exchange_id):
         Core.__init__(self, pair_id, symbol, name, country_id, sector_id, industry_id, exchange, exchange_id)
     
     def __repr__(self):
-        return f'Esta es la clase para las criptos'
+        return f'Crypto class'
 
 
 

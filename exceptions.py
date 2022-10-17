@@ -15,11 +15,11 @@ class IdEmpty(Exception):
     
 class CountryIdNotFound(Exception):
     def __str__(self):
-       return "The country ID param it is not found, check this parameter"
+       return "The country ID parameter is not found, check this parameter"
     
 class ParamIsEmpty(Exception):
     def __str__(self):
-       return  "The param is must"
+       return  "The parameter is mandatory, please, enter a parameter"
    
 class TypeNotValid(Exception):
     def __str__(self):

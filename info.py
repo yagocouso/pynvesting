@@ -23,20 +23,20 @@ class Info(Headers):
     
     def get_countries(self):
         table = self.__html.find(id = self.__countries_id).find_all('li')
-        self.__countries = {country.text[2:-1]: int(country['data-value']) for country in table} # I think that this it is not necessarry, @review
+        self.__countries = {country.text[2:-1]: int(country['data-value']) for country in table} # I think that this is not necessary, @review
         
         
     def get_sector(self):
-        # We have to review the html for decide if it is do posible all in one time
+        # check the html to decide if it is posible to get all the info in one time
         pass
     
     def get_stocks_names(self, country_id):
         if not country_id: raise IdEmpty
-        # I think that it is necesarry pass a country ID. No do all in one time
+        # I think that it is necessary to pass a country ID. Instead of doing it all in one time
         pass
     
     def get_all_stock_names(self):
-        # This function shouldn't use 
+        # This function shouldn't be used 
         pass
     
     @property

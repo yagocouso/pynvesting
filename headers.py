@@ -26,6 +26,9 @@ USER_AGENT = [
 
 
 class Headers:
+    """
+    Defines all the functions and parameters needed to request the info to investing.com
+    """
     __headers = {
         'accept': 'application/json, text/javascript, /; q=0.01',
         'accept-encoding': 'gzip, deflate, br',

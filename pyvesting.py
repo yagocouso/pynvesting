@@ -10,6 +10,16 @@ from decorators import check_param
 from exceptions import TypeNotValid
 
 class Pyvesting():
+    '''
+    Class to extract the desired information about a specific asset.
+    
+    The information availabe to retrieve are:
+    
+    - stock information about the asset
+    - news information about the asset
+    - articles about the asset
+    
+    '''
     
     @staticmethod
     @check_param
